@@ -3,3 +3,11 @@ SELECT 'Hello, World';
 SELECT 'Hello, World' AS Result; -- AS can be used to name a column
 
 SELECT Name, lifeexpectancy AS "Life Expectancy" FROM Country ORDER BY Name;
+
+
+SELECT name, continent, region 
+FROM Country
+WHERE continent = 'Europe' 
+ORDER BY name LIMIT 5 --gives first five countries 
+OFFSET 10 --skips to the next five or ten in the set
+;
