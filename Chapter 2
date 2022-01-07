@@ -1,0 +1,5 @@
+SELECT 'Hello, World';
+
+SELECT 'Hello, World' AS Result; -- AS can be used to name a column
+
+SELECT Name, lifeexpectancy AS "Life Expectancy" FROM Country ORDER BY Name;
