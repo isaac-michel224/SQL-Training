@@ -89,3 +89,21 @@ ALTER TABLE test ADD d TEXT;
 
 
 
+--ID Columns
+
+DROP TABLE IF EXISTS test;
+
+CREATE TABLE test(
+  id INTEGER PRIMARY KEY,
+                  a INTEGER, 
+                  b TEXT
+                 ); 
+                 
+INSERT into test (a,b) values (10, 'a');
+INSERT into test (a,b) values (11, 'b');
+INSERT into test (a,b) values ( 12, 'c');
+
+SELECT * from test;
+
+
+
