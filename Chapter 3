@@ -26,3 +26,16 @@ DROP TABLE test;
 drop table if exists test;
 
 
+DROP TABLE test;
+
+SELECT * FROM test;
+
+CREATE TABLE test (a Integer, b text, c text);
+
+INSERT into test values (1, 'This', 'Right here!');
+
+INSERT into test (b, c) values ('That', 'Over there!');
+
+INSERT into test DEFAULT VALUES;
+
+insert into test (a, b, c) SELECT id, name, description from item;
