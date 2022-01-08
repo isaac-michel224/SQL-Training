@@ -63,6 +63,15 @@ create table test(
   );
 
 
+--Constraints
 
+DROP TABLE IF EXISTS test;
+
+CREATE TABLE test(a TEXT, b TEXT, c TEXT DEFAULT 'panda'); 
+--if we fail to add data to c column, a default value of 'panda' will be insert
+INSERT into test(a, b) values ('one', 'two');
+INSERT into test(a, b) values ('uno', 'two');
+--in some cases, NULL value is separate from unique constraint 
+SELECT * from test;
 
 
