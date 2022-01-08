@@ -12,3 +12,17 @@ INSERT INTO test VALUES (3, 'c');
 
 SELECT * from test;
 
+
+CREATE TABLE test (
+a TEXT,
+  b TEXT 
+);
+
+INSERT INTO test VALUES ('one', 'two');
+SELECT * from test;
+
+DROP TABLE test;
+
+drop table if exists test;
+
+
