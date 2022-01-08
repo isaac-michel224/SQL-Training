@@ -74,4 +74,18 @@ INSERT into test(a, b) values ('uno', 'two');
 --in some cases, NULL value is separate from unique constraint 
 SELECT * from test;
 
+--changing a schema
+
+DROP TABLE IF EXISTS test;
+
+CREATE TABLE test(a TEXT, b TEXT, c TEXT); 
+INSERT into test values ('one', 'two', 'three');
+INSERT into test values ('two', 'three', 'four');
+INSERT into test values ( 'three', 'four', 'five');
+
+SELECT * from test;
+
+ALTER TABLE test ADD d TEXT;
+
+
 
