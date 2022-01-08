@@ -105,5 +105,21 @@ INSERT into test (a,b) values ( 12, 'c');
 
 SELECT * from test;
 
+--Filtering data 
+SELECT * FROM Country;
 
+SELECT name, continent, population from Country
+WHERE population < 100000 OR population is NULL ORDER BY population DESC;
+
+SELECT name, continent, population from Country
+WHERE population < 100000 and continent = 'Oceania' ORDER BY population DESC;
+
+SELECT name, continent, population from Country
+WHERE name like '%island%' ORDER by name;
+
+SELECT name, continent, population from Country
+WHERE name like '_a%' ORDER by name;
+
+SELECT name, continent, population from Country
+WHERE continent in ('Europe','Asia') ORDER by name;
 
