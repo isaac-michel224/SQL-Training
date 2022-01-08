@@ -39,3 +39,30 @@ INSERT into test (b, c) values ('That', 'Over there!');
 INSERT into test DEFAULT VALUES;
 
 insert into test (a, b, c) SELECT id, name, description from item;
+
+
+SELECT * from test WHERE a IS NULL; --NULL is not a value, it is the absence of a value
+--to test for null, input IS NULL into a clause 
+
+
+SELECT * from test WHERE a IS NULL; --NULL is not a value, it is the absence of a value
+--to test for null, input IS NULL into a clause 
+insert into test (a, b, c) VALUES (0, NULL, '');
+SELECT * FROM TEST;
+
+SELECT * from test WHERE b IS NULL; --NULL is not a value, it is the absence(i.e. lack) of a value
+SELECT * from test WHERE c IS ''; --NULL is not a value, it is the absence of a value
+
+
+
+
+create table test(
+  a INTEGER NOT NULL,
+  b text not NULL,
+  c text
+  );
+
+
+
+
+
