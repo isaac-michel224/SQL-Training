@@ -123,3 +123,21 @@ WHERE name like '_a%' ORDER by name;
 SELECT name, continent, population from Country
 WHERE continent in ('Europe','Asia') ORDER by name;
 
+
+SELECT DISTINCT continent FROM Country;
+
+CREATE TABLE test (a int, b int);
+INSERT INTO test VALUES ( 1, 1 );
+INSERT INTO test VALUES ( 2, 1 );
+INSERT INTO test VALUES ( 3, 1 );
+INSERT INTO test VALUES ( 4, 1 );
+INSERT INTO test VALUES ( 5, 1 );
+INSERT INTO test VALUES ( 1, 2 );
+INSERT INTO test VALUES ( 1, 2 );
+INSERT INTO test VALUES ( 1, 2 );
+INSERT INTO test VALUES ( 1, 2 );
+INSERT INTO test VALUES ( 1, 2 );
+SELECT * FROM test;
+
+SELECT DISTINCT a, b from test;
+
