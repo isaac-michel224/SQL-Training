@@ -11,3 +11,9 @@ WHERE continent = 'Europe'
 ORDER BY name LIMIT 5 --gives first five countries 
 OFFSET 10 --skips to the next five or ten in the set
 ;
+
+--counting rows
+
+-- SELECT COUNT(*) FROM Country; --represents count of number of rows in country table 
+-- SELECT COUNT(*) FROM Country WHERE population > 100000000 and continent = 'Europe';
+SELECT COUNT(lifeexpectancy) FROM COUNTRY; --counts rows in listed column, in (), has data
