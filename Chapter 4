@@ -70,3 +70,14 @@ SELECT c.name AS Cust, c.zip, i.name AS Item, i.description, s.quantity AS Quan,
 
 -- restore database
 DELETE FROM customer WHERE id = 4;
+
+
+select released FROM album order by released;
+
+SELECT released,
+    SUBSTR(released, 1, 4) AS year,
+    SUBSTR(released, 6, 2) AS month,
+    SUBSTR(released, 9, 2) AS day
+  FROM album
+  ORDER BY released
+
