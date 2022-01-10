@@ -1,0 +1,276 @@
+--what type is that value; 
+
+
+select typeof(1 + 1);
+select typeof(1 + 1.0);
+select typeof('panda');
+select typeof('panda' + 'koala');
+
+--Integer division;
+
+select 1 / 2;
+select 1.0 / 2;
+select cast(1 as real) / 2;
+select 17 / 5;
+select 17 / 5, 17 % 5;
+
+--rounding numbers
+
+select 2.55555;
+select ROUND (2.55555);
+select ROUND (2.55555, 3);
+select ROUND (2.55555, 0);
+select ROUND (2.55555, 1);
+
+select datetime('now');
+select date('now');
+select time('now');
+select datetime('now', '+1 day');
+select datetime('now', '+3 days');
+select datetime('now', '+1 month');
+select datetime('now', '+1 year');
+select datetime('now', '+3 hours', '+27 minutes');
+
+
+--What are aggregates?
+
+select region, count(*) from country
+group by region;
+
+select region, count(*) AS COUNT from country
+group by region
+order by count desc, region;
+
+SELECT a.title AS Album, COUNT(t.track_number) as Tracks
+  FROM track AS t
+  JOIN album AS a
+    ON a.id = t.album_id
+  GROUP BY a.id
+  ORDER BY Tracks DESC, Album
+
+  SELECT a.title AS Album, COUNT(t.track_number) as Tracks
+  FROM track AS t
+  JOIN album AS a
+    ON a.id = t.album_id
+  GROUP BY a.id
+  HAVING Tracks >= 10
+  ORDER BY Tracks DESC, Album
+
+SELECT a.title AS Album, COUNT(t.track_number) as Tracks
+  FROM track AS t
+  JOIN album AS a
+    ON a.id = t.album_id
+    where a.artist = 'The Beatles'
+  GROUP BY a.id
+  HAVING Tracks >= 10
+  ORDER BY Tracks DESC, Album
+
+  --using aggregate functions
+
+  select count(*) from country;
+select count(population) from country;
+select avg(population) from country;
+select region, avg(population) from country group by region;
+select region, min(population), max(population) from country group by region;
+select region, sum(population) from country group by region;
+
+--aggregate distinct values 
+
+select count(headofstate) from Country;
+select headofstate from Country order by headofstate;
+select count(DISTINCT headofstate) from Country;
+
+
+CREATE TABLE widgetCustomer ( id INTEGER PRIMARY KEY, name TEXT, last_order_id INT );
+CREATE TABLE widgetSale ( id INTEGER PRIMARY KEY, item_id INT, customer_id INT, quan INT, price INT );
+
+INSERT INTO widgetCustomer (name) VALUES ('Bob');
+INSERT INTO widgetCustomer (name) VALUES ('Sally');
+INSERT INTO widgetCustomer (name) VALUES ('Fred');
+
+SELECT * FROM widgetCustomer;
+
+
+CREATE TRIGGER newWidgetSale AFTER INSERT ON widgetSale
+    BEGIN
+        UPDATE widgetCustomer SET last_order_id = NEW.id WHERE widgetCustomer.id = NEW.customer_id;
+    END
+;
+
+
+INSERT INTO widgetSale (item_id, customer_id, quan, price) VALUES (1, 3, 5, 1995);
+INSERT INTO widgetSale (item_id, customer_id, quan, price) VALUES (2, 2, 3, 1495);
+INSERT INTO widgetSale (item_id, customer_id, quan, price) VALUES (3, 1, 1, 2995);
+SELECT * FROM widgetSale;
+
+
+SELECT * FROM widgetCustomer;
+
+
+
+CREATE TABLE widgetSale ( id integer primary key, item_id INT, customer_id INTEGER, quan INT, price INT,
+    reconciled INT );
+INSERT INTO widgetSale (item_id, customer_id, quan, price, reconciled) VALUES (1, 3, 5, 1995, 0);
+INSERT INTO widgetSale (item_id, customer_id, quan, price, reconciled) VALUES (2, 2, 3, 1495, 1);
+INSERT INTO widgetSale (item_id, customer_id, quan, price, reconciled) VALUES (3, 1, 1, 2995, 0);
+SELECT * FROM widgetSale;
+
+CREATE TRIGGER updateWidgetSale BEFORE UPDATE ON widgetSale
+    BEGIN
+        SELECT RAISE(ROLLBACK, 'cannot update table "widgetSale"') FROM widgetSale
+            WHERE id = NEW.id AND reconciled = 1;
+    END
+;
+
+BEGIN TRANSACTION;
+UPDATE widgetSale SET quan = 9 WHERE id = 2;
+END TRANSACTION;
+
+
+
+-- 03 timestamps
+-- test.db
+
+DROP TABLE IF EXISTS widgetSale;
+DROP TABLE IF EXISTS widgetCustomer;
+
+CREATE TABLE widgetCustomer ( id integer primary key, name TEXT, last_order_id INT, stamp TEXT );
+CREATE TABLE widgetSale ( id integer primary key, item_id INT, customer_id INTEGER, quan INT, price INT, stamp TEXT );
+CREATE TABLE widgetLog ( id integer primary key, stamp TEXT, event TEXT, username TEXT, tablename TEXT, table_id INT);
+
+INSERT INTO widgetCustomer (name) VALUES ('Bob');
+INSERT INTO widgetCustomer (name) VALUES ('Sally');
+INSERT INTO widgetCustomer (name) VALUES ('Fred');
+SELECT * FROM widgetCustomer;
+
+CREATE TRIGGER stampSale AFTER INSERT ON widgetSale
+    BEGIN
+        UPDATE widgetSale SET stamp = DATETIME('now') WHERE id = NEW.id;
+        UPDATE widgetCustomer SET last_order_id = NEW.id, stamp = DATETIME('now')
+            WHERE widgetCustomer.id = NEW.customer_id;
+        INSERT INTO widgetLog (stamp, event, username, tablename, table_id)
+            VALUES (DATETIME('now'), 'INSERT', 'TRIGGER', 'widgetSale', NEW.id);
+    END
+;
+
+INSERT INTO widgetSale (item_id, customer_id, quan, price) VALUES (1, 3, 5, 1995);
+INSERT INTO widgetSale (item_id, customer_id, quan, price) VALUES (2, 2, 3, 1495);
+INSERT INTO widgetSale (item_id, customer_id, quan, price) VALUES (3, 1, 1, 2995);
+
+SELECT * FROM widgetSale;
+SELECT * FROM widgetCustomer;
+SELECT * FROM widgetLog;
+
+-- restore database
+DROP TRIGGER IF EXISTS newWidgetSale;
+DROP TRIGGER IF EXISTS updateWidgetSale;
+DROP TRIGGER IF EXISTS stampSale;
+
+DROP TABLE IF EXISTS widgetCustomer;
+DROP TABLE IF EXISTS widgetSale;
+DROP TABLE IF EXISTS widgetLog;
+
+
+
+CREATE TABLE t ( a TEXT, b TEXT );
+INSERT INTO t VALUES ( 'NY0123', 'US4567' );
+INSERT INTO t VALUES ( 'AZ9437', 'GB1234' );
+INSERT INTO t VALUES ( 'CA1279', 'FR5678' );
+SELECT * FROM t;
+
+SELECT SUBSTR(a, 1, 2) AS State, SUBSTR(a, 3) AS SCode, 
+  SUBSTR(b, 1, 2) AS Country, SUBSTR(b, 3) AS CCode FROM t;
+
+SELECT co.Name, ss.CCode FROM (
+    SELECT SUBSTR(a, 1, 2) AS State, SUBSTR(a, 3) AS SCode,
+      SUBSTR(b, 1, 2) AS Country, SUBSTR(b, 3) AS CCode FROM t
+  ) AS ss
+  JOIN Country AS co
+    ON co.Code2 = ss.Country
+;
+
+DROP TABLE t;
+
+
+
+SELECT DISTINCT album_id FROM track WHERE duration <= 90;
+
+SELECT * FROM album
+  WHERE id IN (SELECT DISTINCT album_id FROM track WHERE duration <= 90)
+;
+
+SELECT a.title AS album, a.artist, t.track_number AS seq, t.title, t.duration AS secs
+  FROM album AS a
+  JOIN track AS t
+    ON t.album_id = a.id
+  WHERE a.id IN (SELECT DISTINCT album_id FROM track WHERE duration <= 90)
+  ORDER BY a.title, t.track_number
+;
+
+SELECT a.title AS album, a.artist, t.track_number AS seq, t.title, t.duration AS secs
+  FROM album AS a
+  JOIN (
+    SELECT DISTINCT album_id, track_number, duration, title
+      FROM track
+      WHERE duration <= 90
+  ) AS t
+    ON t.album_id = a.id
+  ORDER BY a.title, t.track_number
+;
+
+
+-- 03 Creating a view
+-- album.db
+
+SELECT id, album_id, title, track_number, 
+  duration / 60 AS m, duration % 60 AS s FROM track;
+
+CREATE VIEW trackView AS
+  SELECT id, album_id, title, track_number, 
+    duration / 60 AS m, duration % 60 AS s FROM track;
+SELECT * FROM trackView;
+
+SELECT a.title AS album, a.artist, t.track_number AS seq, t.title, t.m, t.s
+  FROM album AS a
+  JOIN trackView AS t
+    ON t.album_id = a.id
+  ORDER BY a.title, t.track_number
+;
+
+DROP VIEW IF EXISTS trackView;
+
+
+-- 04 Joined view
+-- album.db
+
+SELECT a.artist AS artist,
+    a.title AS album,
+    t.title AS track,
+    t.track_number AS trackno,
+    t.duration / 60 AS m,
+    t.duration % 60 AS s
+  FROM track AS t
+    JOIN album AS a
+      ON a.id = t.album_id
+;
+
+CREATE VIEW joinedAlbum AS
+  SELECT a.artist AS artist,
+      a.title AS album,
+      t.title AS track,
+      t.track_number AS trackno,
+      t.duration / 60 AS m,
+      t.duration % 60 AS s
+    FROM track AS t
+    JOIN album AS a
+      ON a.id = t.album_id
+;
+
+SELECT * FROM joinedAlbum;
+SELECT * FROM joinedAlbum WHERE artist = 'Jimi Hendrix';
+
+SELECT artist, album, track, trackno, 
+   m || ':' || substr('00' || s, -2, 2) AS duration
+    FROM joinedAlbum;
+
+DROP VIEW IF EXISTS joinedAlbum;
